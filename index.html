@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Планировщик питания</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+
+        html {
+            overflow-y: scroll;
+        }
+
+        #main-filter div {
+            display: table-cell;
+            padding-right: 1em;
+            text-align: center;
+        }
+
+        #dishes-list {
+            margin-top: 1em;
+        }
+
+        #dishes-list div.dish {
+            padding: 0.5em;
+            margin-bottom: 0.5em;
+            border: 1px solid lightgray;
+            border-radius: 1em;
+        }
+
+        #dishes-list div.dish div {
+            display: table-cell;
+        }
+
+        #dishes-list div.dish div img {
+            height: 140px;
+            width: 140px;
+        }
+
+        #dishes-list div.dish div.stats {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        #meals-widget table * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        #meals-widget table#widget-table > tbody > tr > td:first-child {
+            text-align: center;
+        }
+
+        #meals-widget table#widget-table > tbody > tr > td:last-child {
+            text-align: left;
+            max-width: 8em;
+            min-width: 8em;
+            padding: 1em;
+        }
+
+        #meals-widget table#widget-table > tbody > tr > td:last-child ul {
+            margin-left: 1em;
+            padding-left: 0px;
+        }
+
+        #meals-widget table#widget-table > tbody > tr > td:last-child ul > li {
+            margin-bottom: 0.5em;
+
+        }
+
+        #meals-widget table#widget-table > tbody > tr > td:last-child ul > li {
+            margin-bottom: 0.5em;
+
+        }
+
+        #meals-widget table#widget-table table {
+            margin-bottom: 0px;
+        }
+
+        #meals-widget table th {
+            text-align: center;
+        }
+
+        #meals-widget table tr > td:first-child {
+            padding-left: 0.5em;
+            text-align: left;
+        }
+
+        #meals-widget table td {
+            text-align: center;
+        }
+
+        #meals-widget table td > input {
+            text-align: center;
+            width: 3em;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-4" id="meals-widget">
+
+<div class="table-responsive" style="position: fixed;">
+
+<h3 class="text-center">Мой рацион на сегодня</h3>
+
+<table class="table table-condensed" id="widget-table">
+<thead>
+<tr>
+    <th class="text-center">Прием</th>
+    <th class="text-center">Полезные показатели</th>
+    <th class="text-center">Блюда</th>
+
+</tr>
+</thead>
+<tbody>
+
+<tr style="border-bottom: 5px solid #428BCA;">
+    <td style="vertical-align: middle;"><strong>За весь день</strong></td>
+    <td style="vertical-align: middle;">
+        <table class="table table-condensed">
+            <tbody>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Цель</th>
+                <th>Текущие</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>Белки</td>
+                <td><input type="text"
+                           data-bind="dayLimit: mealsModel.day.limits.target.protein, type:'protein' "></td>
+                <td data-bind="text: mealsModel.day.limits.current.protein"></td>
+            </tr>
+            <tr>
+                <td>Жиры</td>
+                <td><input type="text"
+                           data-bind="dayLimit: mealsModel.day.limits.target.fat, type:'fat'"></td>
+                <td data-bind="text: mealsModel.day.limits.current.fat"></td>
+            </tr>
+            <tr>
+                <td>Углеводы</td>
+                <td><input type="text"
+                           data-bind="dayLimit: mealsModel.day.limits.target.carbs, type:'carbs'"></td>
+                <td data-bind="text: mealsModel.day.limits.current.carbs"></td>
+            </tr>
+            <tr>
+                <td>Калории</td>
+                <td><input type="text"
+                           data-bind="dayLimit: mealsModel.day.limits.target.calories, type:'calories'"></td>
+                <td data-bind="text: mealsModel.day.limits.current.calories"></td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+    <td style="vertical-align: middle;">
+        <ul data-bind="foreach: mealsModel.day.dishes">
+            <li data-bind="text: title"></li>
+        </ul>
+    </td>
+
+</tr>
+
+<tr class="bg-success">
+    <td style="vertical-align: middle;">Завтрак</td>
+    <td style="vertical-align: middle;">
+        <table class="table table-condensed">
+            <tbody>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Цель</th>
+                <th>Текущие</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>Белки</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.breakfast.limits.target.protein, type: 'protein', meal:'breakfast'">
+                </td>
+                <td data-bind="text: mealsModel.breakfast.limits.current.protein"></td>
+            </tr>
+            <tr>
+                <td>Жиры</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.breakfast.limits.target.fat, type: 'fat', meal:'breakfast' ">
+                </td>
+                <td data-bind="text: mealsModel.breakfast.limits.current.fat"></td>
+            </tr>
+            <tr>
+                <td>Углеводы</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.breakfast.limits.target.carbs, type: 'carbs', meal:'breakfast' ">
+                </td>
+                <td data-bind="text: mealsModel.breakfast.limits.current.carbs"></td>
+            </tr>
+            <tr>
+                <td>Калории</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.breakfast.limits.target.calories, type'calories', meal:'breakfast'">
+                </td>
+                <td data-bind="text: mealsModel.breakfast.limits.current.calories"></td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+    <td style="vertical-align: middle;">
+        <ul data-bind="foreach: mealsModel.breakfast.dishes">
+            <li><span data-bind="text: title"></span> [<a href="#"
+                                                          data-bind="click: mealsModel.breakfast.deleteDish">x</a>]
+            </li>
+        </ul>
+    </td>
+
+</tr>
+<tr class="bg-warning">
+    <td style="vertical-align: middle;">Обед</td>
+    <td style="vertical-align: middle;">
+        <table class="table table-condensed">
+            <tbody>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Цель</th>
+                <th>Текущие</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>Белки</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.lunch.limits.target.protein, type: 'protein', meal:'lunch'">
+                </td>
+                <td data-bind="text: mealsModel.lunch.limits.current.protein"></td>
+            </tr>
+            <tr>
+                <td>Жиры</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.lunch.limits.target.fat, type: 'fat', meal:'lunch'"></td>
+                <td data-bind="text: mealsModel.lunch.limits.current.fat"></td>
+            </tr>
+            <tr>
+                <td>Углеводы</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.lunch.limits.target.carbs, type: 'carbs', meal:'lunch'">
+                </td>
+                <td data-bind="text: mealsModel.lunch.limits.current.carbs"></td>
+            </tr>
+            <tr>
+                <td>Калории</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.lunch.limits.target.calories, type: 'calories', meal:'lunch'">
+                </td>
+                <td data-bind="text: mealsModel.lunch.limits.current.calories"></td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+    <td style="vertical-align: middle;">
+        <ul data-bind="foreach: mealsModel.lunch.dishes">
+            <li><span data-bind="text: title"></span> [<a href="#"
+                                                          data-bind="click: mealsModel.lunch.deleteDish">x</a>]
+            </li>
+        </ul>
+    </td>
+
+</tr>
+<tr class="bg-info" style="border-bottom: 5px solid #428BCA;">
+    <td style="vertical-align: middle;">Ужин</td>
+    <td style="vertical-align: middle;">
+        <table class="table table-condensed">
+            <tbody>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Цель</th>
+                <th>Текущие</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>Белки</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.dinner.limits.target.protein, type: 'protein', meal:'dinner'">
+                </td>
+                <td data-bind="text: mealsModel.dinner.limits.current.protein" class="text-center"></td>
+            </tr>
+            <tr>
+                <td>Жиры</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.dinner.limits.target.fat, type: 'fat', meal:'dinner'"></td>
+                <td data-bind="text: mealsModel.dinner.limits.current.fat" class="text-center"></td>
+            </tr>
+            <tr>
+                <td>Углеводы</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.dinner.limits.target.carbs, type: 'carbs', meal:'dinner'">
+                </td>
+                <td data-bind="text: mealsModel.dinner.limits.current.carbs" class="text-center"></td>
+            </tr>
+            <tr>
+                <td>Калории</td>
+                <td><input type="text"
+                           data-bind="mealLimit: mealsModel.dinner.limits.target.calories, type: 'calories', meal:'dinner'">
+                </td>
+                <td data-bind="text: mealsModel.dinner.limits.current.calories" class="text-center"></td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+    <td style="vertical-align: middle;">
+        <ul data-bind="foreach: mealsModel.dinner.dishes">
+            <li><span data-bind="text: title"></span> [<a href="#"
+                                                          data-bind="click: mealsModel.dinner.deleteDish">x</a>]
+            </li>
+        </ul>
+    </td>
+
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+<div class="col-md-6">
+    <h3 style="text-align: center;">Искать блюда</h3>
+
+    <form role="form" class="bg-primary" style="padding: 1em;" id="main-filter">
+        <div class="container">
+            <div style="display: table-cell">
+                <label>Название блюда</label>
+                <input type="text" class="form-control" placeholder="Начните печатать"
+                       data-bind="value: filterByTitle, valueUpdate: 'afterkeydown'">
+            </div>
+
+            <div style="display: table-cell">
+                <label>Тип блюда</label>
+                <select class="form-control" data-bind="value: filterByType">
+                    <option>Все</option>
+                    <option>Первые блюда</option>
+                    <option>Вторые блюда</option>
+                    <option>Салаты</option>
+                    <option>Закуски</option>
+                    <option>Бутерброды</option>
+                    <option>Выпечка</option>
+                    <option>Напитки</option>
+                </select>
+            </div>
+            <br/>
+
+            <div style="display: table-cell">
+                <label>Белки</label>
+                <input type="text" class="form-control" placeholder="До" style="width: 4em;"
+                       data-bind="value: filterByProtein, valueUpdate: 'afterkeydown'">
+            </div>
+
+            <div style="display: table-cell">
+                <label>Жиры</label>
+                <input type="text" class="form-control" placeholder="До" style="width: 4em;"
+                       data-bind="value: filterByFat, valueUpdate: 'afterkeydown'">
+            </div>
+
+            <div style="display: table-cell">
+                <label>Углеводы</label>
+                <input type="text" class="form-control" placeholder="До" style="width: 4em;"
+                       data-bind="value: filterByCarbs, valueUpdate: 'afterkeydown'">
+            </div>
+
+            <div style="display: table-cell">
+                <label>Калории</label>
+                <input type="text" class="form-control" placeholder="До" style="width: 4em;"
+                       data-bind="value: filterByCalories, valueUpdate: 'afterkeydown'">
+            </div>
+        </div>
+    </form>
+
+
+    <div id="dishes-list">
+        <!-- ko foreach: dishesModel.dishes -->
+        <div class="dish">
+            <div style="float: right;" data-bind="text: type" class="badge"></div>
+            <h4 data-bind="text: title"></h4>
+
+
+            <div class="img-wrapper">
+                <img class="img-rounded" data-bind="attr: { src: image }">
+            </div>
+            <div class="stats">
+                <ul>
+                    <li>Белки - <span data-bind="text: stats.protein"></span></li>
+                    <li>Жиры - <span data-bind="text: stats.fat"></span></li>
+                    <li>Углеводы - <span data-bind="text: stats.carbs"></span></li>
+                    <li>Калории - <span data-bind="text: stats.calories"></span></li>
+                </ul>
+            </div>
+            <br/>
+
+            <p>
+                <strong>Состав:</strong>
+                <span data-bind="foreach: ingredients"><code data-bind="text: $data" style="margin-bottom: 1em;"></code> </span>
+
+            </p>
+
+            <p>
+                Добавить на:
+                <button type="button" class="btn btn-success btn-sm" data-bind="click: $root.addToBreakfast">Завтрак
+                </button>
+                <button type="button" class="btn btn-warning btn-sm" data-bind="click: $root.addToLunch">Обед</button>
+                <button type="button" class="btn btn-info btn-sm" data-bind="click: $root.addToDinner">Ужин</button>
+            </p>
+        </div>
+        <!-- /ko -->
+
+    </div>
+
+
+</div>
+<div class="col-md-2" id="products-filter">
+    <h3 style="text-align: center;">Продукты</h3>
+    <!-- ko foreach: productsFilter.ingredients() -->
+
+    <h3 style="border-bottom: 1px solid grey" data-bind="text:category"></h3>
+    <!-- ko foreach: $data.items -->
+    <div><code><input type="checkbox" style="margin-right: 0.5em"
+                      data-bind="attr: { value: $data }, checked: productsFilter.selectedItems"/><span
+            data-bind="text: $data"></span></code></div>
+    <!-- /ko -->
+
+    <!-- /ko -->
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/lib/jquery-1.9.1.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.js"></script>
+
+<script src="js/lib/underscore.js"></script>
+<script src="js/lib/knockout-3.1.0.debug.js"></script>
+
+<script src="js/helpers.js"></script>
+<script src="js/data/ingredients.js"></script>
+<script src="js/data/dishes.js"></script>
+<script src="js/data/meals.js"></script>
+
+<script src="js/app/filters.js"></script>
+<script src="js/app/dishes-list.js"></script>
+<script src="js/app/meals-widget.js"></script>
+
+
+<!-- Small modal -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+     aria-hidden="true" id="myModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="padding: 1em;">
+            ...
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
