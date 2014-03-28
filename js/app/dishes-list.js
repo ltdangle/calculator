@@ -99,7 +99,7 @@ my.dishesModel = (function () {
                 var ingredient = item.ingredients[i];
 
                 if (_.indexOf(my.productsFilter.selectedItems(), ingredient) == -1) {
-                    console.log(ingredient + 'is not allowed');
+
                     is_valid = false;
                     continue;
                 }
@@ -134,7 +134,7 @@ my.dishesModel = (function () {
 
         my.mealsModel.breakfast.dishes.push(item);
 
-        console.log('Added item to breakfast');
+
     };
 
     dishesModel.addToLunch = function (item) {
@@ -157,7 +157,7 @@ my.dishesModel = (function () {
 
         my.mealsModel.lunch.dishes.push(item);
 
-        console.log('Added item to lunch');
+
 
     };
 
@@ -181,7 +181,6 @@ my.dishesModel = (function () {
 
         my.mealsModel.dinner.dishes.push(item);
 
-        console.log('Added item to dinner');
     };
 
 

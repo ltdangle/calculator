@@ -23,9 +23,9 @@ my.productsFilter = (function () {
     productsFilter.selectedItems = ko.observableArray();
 
     for (var ing in productsFilter.ingredients()) {
-        console.log(productsFilter.ingredients()[ing].items());
+
         for (var key in productsFilter.ingredients()[ing].items()) {
-            console.log(productsFilter.ingredients()[ing].items()[key]);
+
             productsFilter.selectedItems().push(productsFilter.ingredients()[ing].items()[key]);
         }
     }
