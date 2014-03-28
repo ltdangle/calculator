@@ -36,11 +36,11 @@ ko.bindingHandlers.mealLimit = {
 
             }
 
-            var day_limit = mealsModel.day.limits.target[bindings['type']]();
+            var day_limit = my.mealsModel.day.limits.target[bindings['type']]();
 
-            var meals_total = parseInt(mealsModel.breakfast.limits.target[bindings['type']]());
-            meals_total += parseInt(mealsModel.lunch.limits.target[bindings['type']]());
-            meals_total += parseInt(mealsModel.dinner.limits.target[bindings['type']]());
+            var meals_total = parseInt(my.mealsModel.breakfast.limits.target[bindings['type']]());
+            meals_total += parseInt(my.mealsModel.lunch.limits.target[bindings['type']]());
+            meals_total += parseInt(my.mealsModel.dinner.limits.target[bindings['type']]());
 
 
             //check if meal setting is bigger than setting for the whole day
@@ -57,10 +57,10 @@ ko.bindingHandlers.mealLimit = {
 
 
             //check if meal setting is larger than what has already been selected for the meal
-            var current_limit = parseInt(mealsModel[bindings['meal']].limits.current[bindings['type']]());
+            var current_limit = parseInt(my.mealsModel[bindings['meal']].limits.current[bindings['type']]());
 
             if (current_limit > 0 && (current_value_obs() < current_limit)) {
-                error_message('Невозможно изменить показатель цели. Значение больше текущего ( ' + current_value_obs() + ' < ' + mealsModel[bindings['meal']].limits.current[bindings['type']]() + ' )');
+                error_message('Невозможно изменить показатель цели. Значение больше текущего ( ' + current_value_obs() + ' < ' + my.mealsModel[bindings['meal']].limits.current[bindings['type']]() + ' )');
 
                 current_value_obs(previous_value_obs());
                 this.value = current_value_obs();
@@ -96,10 +96,10 @@ ko.bindingHandlers.dayLimit = {
             }
 
             //check if setting for the day is larger than what has already been selected for the day
-            var current_limit = parseInt(mealsModel.day.limits.current[bindings['type']]());
+            var current_limit = parseInt(my.mealsModel.day.limits.current[bindings['type']]());
 
             if (current_limit > 0 && (current_value_obs() < current_limit)) {
-                error_message('Невозможно изменить показатель цели. Значение больше текущего ( ' + current_value_obs() + ' < ' + mealsModel.day.limits.current[bindings['type']]() + ' )');
+                error_message('Невозможно изменить показатель цели. Значение больше текущего ( ' + current_value_obs() + ' < ' + my.mealsModel.day.limits.current[bindings['type']]() + ' )');
 
                 current_value_obs(previous_value_obs());
                 this.value = current_value_obs();

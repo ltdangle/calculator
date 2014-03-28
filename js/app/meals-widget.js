@@ -1,97 +1,181 @@
+my.mealsModel = (function () {
+    //setup meals model
+    var mealsModel = {
+        breakfast: {
+            limits: {
+                target: {
+                    protein: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    fat: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    carbs: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    calories: ko.observable(0).extend({ previousValue: 'previousValue' })
+                },
+                current: {
+                    protein: ko.observable(0),
+                    fat: ko.observable(0),
+                    carbs: ko.observable(0),
+                    calories: ko.observable(0)
+                }
+            },
+            dishes: ko.observableArray([])
+        },
+        lunch: {
+            limits: {
+                target: {
+                    protein: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    fat: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    carbs: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    calories: ko.observable(0).extend({ previousValue: 'previousValue' })
+                },
+                current: {
+                    protein: ko.observable(0),
+                    fat: ko.observable(0),
+                    carbs: ko.observable(0),
+                    calories: ko.observable(0)
+                }
+            },
+            dishes: ko.observableArray([])
+        },
+        dinner: {
+            limits: {
+                target: {
+                    protein: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    fat: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    carbs: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    calories: ko.observable(0).extend({ previousValue: 'previousValue' })
+                },
+                current: {
+                    protein: ko.observable(0),
+                    fat: ko.observable(0),
+                    carbs: ko.observable(0),
+                    calories: ko.observable(0)
+                }
+            },
+            dishes: ko.observableArray([])
+        },
 
-var meals_id=0;
+        day: {
+            limits: {
+                target: {
+                    protein: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    fat: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    carbs: ko.observable(0).extend({ previousValue: 'previousValue' }),
+                    calories: ko.observable(0).extend({ previousValue: 'previousValue' })
+                },
+                current: {
+                    protein: null,
+                    fat: null,
+                    carbs: null,
+                    calories: null
+                }
+            },
+            dishes: null
+        }
+    }
+
+
+    my.meals_id = 0;
 
 //observables for current nutrition stats
-mealsModel.day.limits.current.protein=ko.computed(function(){
-    return mealsModel.breakfast.limits.current.protein() + mealsModel.lunch.limits.current.protein() + mealsModel.dinner.limits.current.protein();
+    mealsModel.day.limits.current.protein = ko.computed(function () {
+        return mealsModel.breakfast.limits.current.protein() + mealsModel.lunch.limits.current.protein() + mealsModel.dinner.limits.current.protein();
 
-});
+    });
 
-mealsModel.day.limits.current.fat=ko.computed(function(){
-    return mealsModel.breakfast.limits.current.fat() + mealsModel.lunch.limits.current.fat() + mealsModel.dinner.limits.current.fat();
+    mealsModel.day.limits.current.fat = ko.computed(function () {
+        return mealsModel.breakfast.limits.current.fat() + mealsModel.lunch.limits.current.fat() + mealsModel.dinner.limits.current.fat();
 
-});
+    });
 
-mealsModel.day.limits.current.carbs=ko.computed(function(){
-    return mealsModel.breakfast.limits.current.carbs() + mealsModel.lunch.limits.current.carbs() + mealsModel.dinner.limits.current.carbs();
+    mealsModel.day.limits.current.carbs = ko.computed(function () {
+        return mealsModel.breakfast.limits.current.carbs() + mealsModel.lunch.limits.current.carbs() + mealsModel.dinner.limits.current.carbs();
 
-});
+    });
 
-mealsModel.day.limits.current.calories=ko.computed(function(){
-    return mealsModel.breakfast.limits.current.calories() + mealsModel.lunch.limits.current.calories() + mealsModel.dinner.limits.current.calories();
+    mealsModel.day.limits.current.calories = ko.computed(function () {
+        return mealsModel.breakfast.limits.current.calories() + mealsModel.lunch.limits.current.calories() + mealsModel.dinner.limits.current.calories();
 
-});
+    });
 
 
 //computed observable for day dishes
-mealsModel.day.dishes=ko.computed(function (){
-    var day_dishes=[];
-    _.each(mealsModel.breakfast.dishes(), function(element, index){
-        day_dishes.push(element);
+    mealsModel.day.dishes = ko.computed(function () {
+        var day_dishes = [];
+        _.each(mealsModel.breakfast.dishes(), function (element, index) {
+            day_dishes.push(element);
+        });
+
+        _.each(mealsModel.lunch.dishes(), function (element, index) {
+            day_dishes.push(element);
+        });
+
+        _.each(mealsModel.dinner.dishes(), function (element, index) {
+            day_dishes.push(element);
+        });
+
+        return day_dishes;
     });
-
-    _.each(mealsModel.lunch.dishes(), function(element, index){
-        day_dishes.push(element);
-    });
-
-    _.each(mealsModel.dinner.dishes(), function(element, index){
-        day_dishes.push(element);
-    });
-
-    return day_dishes;
-});
-
 
 
 //allow individual dishes deletion
-mealsModel.breakfast.deleteDish=function(dish, event){
-    event.preventDefault();
+    mealsModel.breakfast.deleteDish = function (dish, event) {
 
-    //http://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
-    var newArray = _.reject(mealsModel.breakfast.dishes(), function(el) { return el.id === dish.id; });
+        event.preventDefault();
 
-    mealsModel.breakfast.dishes(newArray);
+        //http://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
+        var newArray = _.reject(my.mealsModel.breakfast.dishes(), function (el) {
+            return el.id === dish.id;
+        });
 
-    //update nutrition stats
-    for (var key in mealsModel.breakfast.limits.current){
-        var curr_val=mealsModel.breakfast.limits.current[key]();
-        var diff=curr_val-dish.stats[key];
-        mealsModel.breakfast.limits.current[key](diff);
+        my.mealsModel.breakfast.dishes(newArray);
+
+        //update nutrition stats
+        for (var key in mealsModel.breakfast.limits.current) {
+            var curr_val = mealsModel.breakfast.limits.current[key]();
+            var diff = curr_val - dish.stats[key];
+            my.mealsModel.breakfast.limits.current[key](diff);
+        }
     }
-}
 
-mealsModel.lunch.deleteDish=function(dish, event){
-    event.preventDefault();
+    mealsModel.lunch.deleteDish = function (dish, event) {
+        event.preventDefault();
 
-    //http://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
-    var newArray = _.reject(mealsModel.lunch.dishes(), function(el) { return el.id === dish.id; });
+        //http://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
+        var newArray = _.reject(mealsModel.lunch.dishes(), function (el) {
+            return el.id === dish.id;
+        });
 
-    mealsModel.lunch.dishes(newArray);
+        mealsModel.lunch.dishes(newArray);
 
-    //update nutrition stats
-    for (var key in mealsModel.lunch.limits.current){
-        var curr_val=mealsModel.lunch.limits.current[key]();
-        var diff=curr_val-dish.stats[key];
-        mealsModel.lunch.limits.current[key](diff);
+        //update nutrition stats
+        for (var key in mealsModel.lunch.limits.current) {
+            var curr_val = mealsModel.lunch.limits.current[key]();
+            var diff = curr_val - dish.stats[key];
+            mealsModel.lunch.limits.current[key](diff);
+        }
     }
-}
 
-mealsModel.dinner.deleteDish=function(dish, event){
-    event.preventDefault();
+    mealsModel.dinner.deleteDish = function (dish, event) {
+        event.preventDefault();
 
-    //http://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
-    var newArray = _.reject(mealsModel.dinner.dishes(), function(el) { return el.id === dish.id; });
+        //http://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
+        var newArray = _.reject(mealsModel.dinner.dishes(), function (el) {
+            return el.id === dish.id;
+        });
 
-    mealsModel.dinner.dishes(newArray);
+        mealsModel.dinner.dishes(newArray);
 
-    //update nutrition stats
-    for (var key in mealsModel.dinner.limits.current){
-        var curr_val=mealsModel.dinner.limits.current[key]();
-        var diff=curr_val-dish.stats[key];
-        mealsModel.dinner.limits.current[key](diff);
+        //update nutrition stats
+        for (var key in mealsModel.dinner.limits.current) {
+            var curr_val = mealsModel.dinner.limits.current[key]();
+            var diff = curr_val - dish.stats[key];
+            mealsModel.dinner.limits.current[key](diff);
+        }
     }
-}
 
 
+    ko.applyBindings(mealsModel, document.getElementById('meals-widget'));
 
-ko.applyBindings(mealsModel, document.getElementById('meals-widget'));
+    return mealsModel;
+
+})();
+

@@ -1,27 +1,37 @@
-mainFilter={};
+my.mainFilter = (function () {
+    var mainFilter = {};
 
-mainFilter.filterByTitle=ko.observable('');
-mainFilter.filterByProtein=ko.observable('');
-mainFilter.filterByFat=ko.observable('');
-mainFilter.filterByCarbs=ko.observable('');
-mainFilter.filterByCalories=ko.observable('');
-mainFilter.filterByType=ko.observable('');
+    mainFilter.filterByTitle = ko.observable('');
+    mainFilter.filterByProtein = ko.observable('');
+    mainFilter.filterByFat = ko.observable('');
+    mainFilter.filterByCarbs = ko.observable('');
+    mainFilter.filterByCalories = ko.observable('');
+    mainFilter.filterByType = ko.observable('');
 
-ko.applyBindings(mainFilter, document.getElementById('main-filter'));
+    ko.applyBindings(mainFilter, document.getElementById('main-filter'));
+
+    return mainFilter;
+
+})();
 
 
-var productsFilter={
-    ingredients: ko.observableArray(my.INGREDIENTS)
-};
+my.productsFilter = (function () {
+    var productsFilter = {
+        ingredients: ko.observableArray(my.INGREDIENTS)
+    };
 
-productsFilter.selectedItems=ko.observableArray();
+    productsFilter.selectedItems = ko.observableArray();
 
-for (var ing in productsFilter.ingredients()){
-    console.log(productsFilter.ingredients()[ing].items());
-    for (var key in productsFilter.ingredients()[ing].items()){
-        console.log(productsFilter.ingredients()[ing].items()[key]);
-        productsFilter.selectedItems().push(productsFilter.ingredients()[ing].items()[key]);
+    for (var ing in productsFilter.ingredients()) {
+        console.log(productsFilter.ingredients()[ing].items());
+        for (var key in productsFilter.ingredients()[ing].items()) {
+            console.log(productsFilter.ingredients()[ing].items()[key]);
+            productsFilter.selectedItems().push(productsFilter.ingredients()[ing].items()[key]);
+        }
     }
-}
 
-ko.applyBindings(productsFilter, document.getElementById('products-filter'));
+    ko.applyBindings(productsFilter, document.getElementById('products-filter'));
+
+    return productsFilter;
+})();
+
